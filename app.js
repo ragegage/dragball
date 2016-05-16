@@ -4,3 +4,7 @@ import Board from './components/board'
 function App(){
   this.board = new Board('red', 'blue')
 }
+
+
+// for testing
+window.App = App

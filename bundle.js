@@ -56,6 +56,9 @@
 	function App() {
 	  this.board = new _board2.default('red', 'blue');
 	}
+	
+	// for testing
+	window.App = App;
 
 /***/ },
 /* 1 */
