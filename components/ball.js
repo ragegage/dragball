@@ -10,3 +10,5 @@ Ball.prototype.getPos = function () {
 };
 
 //tracks velocity & friction
+
+export default Ball

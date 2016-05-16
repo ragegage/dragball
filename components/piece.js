@@ -10,3 +10,5 @@ Piece.prototype.getPos = function () {
 };
 
 //tracks velocity & friction
+
+export default Piece

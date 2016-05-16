@@ -23,3 +23,5 @@ Board.prototype.populatePieces = function () {
 // tracks collisions
   // incl. out-of-bounds/off-the-walls
 // tracks goals
+
+export default Board
