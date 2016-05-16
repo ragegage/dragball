@@ -1,10 +1,12 @@
-const PIECE_SIZE = 50
-
-function Piece(startPos){
+function Piece(startPos, size){
   this.pos = startPos
-  this.size = PIECE_SIZE
+  this.size = size
   this.xVel = 0
   this.yVel = 0
 }
+
+Piece.prototype.getPos = function () {
+  return this.pos
+};
 
 //tracks velocity & friction
