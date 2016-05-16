@@ -5,3 +5,9 @@ The app will allow the user to play games of "Dragball". Gameplay will entail cl
 Pieces will bounce off of each other, and the ball will be knocked around the field of play. Friction will be applied on all movement, so that pieces, once in motion, will eventually come to rest.
 
 Pieces will be round, and the angle of the bounces will be as accurate as possible in the given time frame.
+
+Potential components include:
+-App
+-Board
+-Piece
+-Ball
