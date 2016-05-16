@@ -1,3 +1,6 @@
+import Piece from './piece'
+import Ball from './ball'
+
 const BOARD_WIDTH = 600
 const BOARD_HEIGHT = 400
 
