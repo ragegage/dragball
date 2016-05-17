@@ -1,8 +1,9 @@
-import Board from './components/board'
+import View from './components/view'
 
 //initialize board with player/s
 function App(){
-  this.board = new Board('red', 'blue')
+  const ctx = document.getElementById('game-canvas').getContext("2d");
+  this.view = new View(ctx)
 }
 
 

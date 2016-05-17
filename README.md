@@ -11,3 +11,7 @@ Potential components include:
 -Board
 -Piece
 -Ball
+
+...as well as a View component that manages the display of the game.
+
+Thanks to Guy Hadas' Cowboy Shootout for structure and inspiration.
