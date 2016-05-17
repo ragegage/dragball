@@ -85,7 +85,6 @@
 	function View(ctx) {
 	  this.board = new _board2.default('red', 'blue');
 	  this.ctx = ctx;
-	  // debugger
 	  this.ch = new _click_handler2.default(this);
 	}
 	
@@ -105,7 +104,9 @@
 	};
 	
 	View.prototype.onClick = function (pos) {
-	  if (this.board.anyClicked(pos)) console.log("clicked!");
+	  var selectedPiece = this.board.getClicked(pos)[0];
+	  debugger;
+	  if (selectedPiece) console.log("clicked!");
 	};
 	
 	exports.default = View;
@@ -204,8 +205,8 @@
 	  });
 	};
 	
-	Board.prototype.anyClicked = function (pos) {
-	  return this.allObjects().some(function (obj) {
+	Board.prototype.getClicked = function (pos) {
+	  return this.allObjects().filter(function (obj) {
 	    return obj.containsPoint(pos);
 	  });
 	};
@@ -275,7 +276,7 @@
 	};
 	
 	Piece.prototype.containsPoint = function (pointPos) {
-	  return Math.pow(pointPos[0] - this.pos[0], 2) + Math.pow(pointPos[1] - this.pos[1], 2) < Math.pow(this.size, 2);
+	  if (Math.pow(pointPos[0] - this.pos[0], 2) + Math.pow(pointPos[1] - this.pos[1], 2) < Math.pow(this.size, 2)) return this;
 	};
 	
 	//tracks velocity & friction
@@ -322,6 +323,7 @@
 	
 	ClickHandler.prototype.addListeners = function () {
 	  document.addEventListener("mousedown", this.processMouseDown.bind(this), false);
+	  document.addEventListener("mouseup", this.processMouseUp.bind(this), false);
 	};
 	
 	ClickHandler.prototype.processMouseDown = function (e) {
@@ -336,6 +338,18 @@
 	
 	  var pos = [relativeLocationX, relativeLocationY];
 	  this.view.onClick(pos);
+	};
+	
+	ClickHandler.prototype.processMouseUp = function (e) {
+	  e.preventDefault();
+	
+	  var elLocationX = this.canvas.getBoundingClientRect().left;
+	  var elLocationY = this.canvas.getBoundingClientRect().top;
+	  var relativeLocationX = e.pageX - elLocationX;
+	  var relativeLocationY = e.pageY - elLocationY;
+	
+	  var pos = [relativeLocationX, relativeLocationY];
+	  this.view.onClickRelease(pos);
 	};
 	
 	exports.default = ClickHandler;

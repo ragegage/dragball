@@ -70,8 +70,8 @@ Board.prototype.turnFinished = function () {
   this.allObjects().every( obj => obj.isStopped() )
 };
 
-Board.prototype.anyClicked = function (pos) {
-  return this.allObjects().some( obj => obj.containsPoint(pos) )
+Board.prototype.getClicked = function (pos) {
+  return this.allObjects().filter( obj => obj.containsPoint(pos) )
 };
 
 // tracks collisions

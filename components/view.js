@@ -5,7 +5,6 @@ import ClickHandler from '../utils/click_handler'
 function View(ctx){
   this.board = new Board('red', 'blue')
   this.ctx = ctx
-  // debugger
   this.ch = new ClickHandler(this)
 }
 
@@ -25,7 +24,9 @@ View.prototype.step = function () {
 };
 
 View.prototype.onClick = function (pos) {
-  if (this.board.anyClicked(pos))
+  let selectedPiece = this.board.getClicked(pos)[0]
+  debugger
+  if (selectedPiece)
     console.log("clicked!");
 };
 

@@ -64,9 +64,10 @@ Piece.prototype.isStopped = function () {
 };
 
 Piece.prototype.containsPoint = function (pointPos) {
-  return Math.pow((pointPos[0] - this.pos[0]), 2) +
-  Math.pow((pointPos[1] - this.pos[1]), 2) <
-  Math.pow(this.size, 2)
+  if( Math.pow((pointPos[0] - this.pos[0]), 2) +
+      Math.pow((pointPos[1] - this.pos[1]), 2) <
+      Math.pow(this.size, 2) )
+    return this
 };
 
 //tracks velocity & friction
