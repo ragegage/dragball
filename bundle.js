@@ -104,9 +104,22 @@
 	};
 	
 	View.prototype.onClick = function (pos) {
-	  var selectedPiece = this.board.getClicked(pos)[0];
-	  debugger;
-	  if (selectedPiece) console.log("clicked!");
+	  this.selectedPiece = this.board.getClicked(pos)[0];
+	  if (this.selectedPiece) this.selectedPiece.select();
+	};
+	
+	View.prototype.onClickRelease = function (pos) {
+	  if (this.selectedPiece) {
+	    var dx = (this.selectedPiece.pos[0] - pos[0]) / 20;
+	    var dy = (this.selectedPiece.pos[1] - pos[1]) / 20;
+	    dx = dx > 10 ? 10 : dx;
+	    dx = dx < -10 ? -10 : dx;
+	    dy = dy > 10 ? 10 : dy;
+	    dy = dy < -10 ? -10 : dy;
+	    this.selectedPiece.setVector([dx, dy]);
+	
+	    this.selectedPiece.unselect();
+	  }
 	};
 	
 	exports.default = View;
@@ -147,7 +160,11 @@
 	}
 	
 	Board.prototype.populatePieces = function () {
-	  return [new _piece2.default([BOARD_WIDTH / 2, BOARD_HEIGHT / 2], PIECE_SIZE, this.team1)];
+	  var pieces = [];
+	  pieces.push(new _piece2.default([BOARD_WIDTH / 2, BOARD_HEIGHT / 2], PIECE_SIZE, this.team1));
+	  pieces.push(new _piece2.default([100, 100], PIECE_SIZE, this.team2));
+	
+	  return pieces;
 	};
 	
 	Board.prototype.step = function () {
@@ -172,6 +189,9 @@
 	  var self = this;
 	  //checks all objects to see if they've collided with another object or the walls
 	  //updates velocities appropriately
+	  // this.allObjects().forEach( function(object1) {
+	  //   this.allObjects().forEach ( object2 => this.isCollided(object1, object2) )
+	  // })
 	
 	  //wall collisions
 	  this.allObjects().forEach(function (object) {
@@ -229,9 +249,10 @@
 	function Piece(startPos, size, color) {
 	  this.pos = startPos;
 	  this.size = size;
-	  this.xVel = Math.floor(Math.random() * 20 - 29);
-	  this.yVel = Math.floor(Math.random() * 20 - 29);
+	  this.xVel = 0;
+	  this.yVel = 0;
 	  this.color = color;
+	  this.selected = false;
 	}
 	
 	Piece.prototype.getPos = function () {
@@ -255,12 +276,31 @@
 	};
 	
 	Piece.prototype.draw = function (ctx) {
+	  if (this.selected) this.drawSelected(ctx);
+	
 	  ctx.fillStyle = this.color;
 	  ctx.beginPath();
 	
 	  ctx.arc(this.pos[0], this.pos[1], this.size, 0, 2 * Math.PI, false);
 	
 	  ctx.fill();
+	};
+	
+	Piece.prototype.drawSelected = function (ctx) {
+	  ctx.fillStyle = "yellow";
+	  ctx.beginPath();
+	
+	  ctx.arc(this.pos[0], this.pos[1], this.size + 10, 0, 2 * Math.PI, false);
+	
+	  ctx.fill();
+	};
+	
+	Piece.prototype.select = function () {
+	  this.selected = true;
+	};
+	
+	Piece.prototype.unselect = function () {
+	  this.selected = false;
 	};
 	
 	Piece.prototype.bounceX = function () {
@@ -277,6 +317,11 @@
 	
 	Piece.prototype.containsPoint = function (pointPos) {
 	  if (Math.pow(pointPos[0] - this.pos[0], 2) + Math.pow(pointPos[1] - this.pos[1], 2) < Math.pow(this.size, 2)) return this;
+	};
+	
+	Piece.prototype.setVector = function (vector) {
+	  this.xVel = vector[0];
+	  this.yVel = vector[1];
 	};
 	
 	//tracks velocity & friction

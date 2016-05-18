@@ -17,17 +17,30 @@ View.prototype.run = function () {
 };
 
 View.prototype.step = function () {
-  this.board.step();
-  this.board.draw(this.ctx);
+  this.board.step()
+  this.board.draw(this.ctx)
 
-  requestAnimationFrame(this.run.bind(this));
+  requestAnimationFrame(this.run.bind(this))
 };
 
 View.prototype.onClick = function (pos) {
-  let selectedPiece = this.board.getClicked(pos)[0]
-  debugger
-  if (selectedPiece)
-    console.log("clicked!");
+  this.selectedPiece = this.board.getClicked(pos)[0]
+  if (this.selectedPiece)
+    this.selectedPiece.select()
+};
+
+View.prototype.onClickRelease = function (pos) {
+  if (this.selectedPiece) {
+    let dx = (this.selectedPiece.pos[0] - pos[0]) / 20
+    let dy = (this.selectedPiece.pos[1] - pos[1]) / 20
+    dx = (dx > 10 ? 10 : dx)
+    dx = (dx < -10 ? -10 : dx)
+    dy = (dy > 10 ? 10 : dy)
+    dy = (dy < -10 ? -10 : dy)
+    this.selectedPiece.setVector([dx, dy])
+    
+    this.selectedPiece.unselect()
+  }
 };
 
 export default View

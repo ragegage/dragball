@@ -1,9 +1,10 @@
 function Piece(startPos, size, color){
   this.pos = startPos
   this.size = size
-  this.xVel = Math.floor((Math.random() * 20) - 29);
-  this.yVel = Math.floor((Math.random() * 20) - 29);
+  this.xVel = 0
+  this.yVel = 0
   this.color = color
+  this.selected = false
 }
 
 Piece.prototype.getPos = function () {
@@ -36,6 +37,9 @@ Piece.prototype.decelerate = function () {
 };
 
 Piece.prototype.draw = function (ctx) {
+  if(this.selected)
+    this.drawSelected(ctx)
+
   ctx.fillStyle = this.color;
   ctx.beginPath();
 
@@ -49,6 +53,30 @@ Piece.prototype.draw = function (ctx) {
   );
 
   ctx.fill();
+};
+
+Piece.prototype.drawSelected = function (ctx) {
+  ctx.fillStyle = "yellow";
+  ctx.beginPath();
+
+  ctx.arc(
+    this.pos[0],
+    this.pos[1],
+    this.size + 10,
+    0,
+    2 * Math.PI,
+    false
+  );
+
+  ctx.fill();
+};
+
+Piece.prototype.select = function () {
+  this.selected = true
+};
+
+Piece.prototype.unselect = function () {
+  this.selected = false
 };
 
 Piece.prototype.bounceX = function () {
@@ -68,6 +96,11 @@ Piece.prototype.containsPoint = function (pointPos) {
       Math.pow((pointPos[1] - this.pos[1]), 2) <
       Math.pow(this.size, 2) )
     return this
+};
+
+Piece.prototype.setVector = function (vector) {
+  this.xVel = vector[0]
+  this.yVel = vector[1]
 };
 
 //tracks velocity & friction

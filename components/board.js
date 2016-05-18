@@ -17,7 +17,11 @@ function Board(team1, team2){
 }
 
 Board.prototype.populatePieces = function () {
-  return [new Piece([BOARD_WIDTH/2, BOARD_HEIGHT/2], PIECE_SIZE, this.team1)]
+  let pieces = []
+  pieces.push(new Piece([BOARD_WIDTH/2, BOARD_HEIGHT/2], PIECE_SIZE, this.team1))
+  pieces.push(new Piece([100, 100], PIECE_SIZE, this.team2))
+
+  return pieces
 };
 
 Board.prototype.step = function () {
@@ -38,6 +42,9 @@ Board.prototype.checkCollisions = function () {
   let self = this
   //checks all objects to see if they've collided with another object or the walls
     //updates velocities appropriately
+  // this.allObjects().forEach( function(object1) {
+  //   this.allObjects().forEach ( object2 => this.isCollided(object1, object2) )
+  // })
 
   //wall collisions
   this.allObjects().forEach( object => this.handleWallBounces(object) );
