@@ -42,8 +42,10 @@ Board.prototype.checkCollisions = function () {
   let self = this
   //checks all objects to see if they've collided with another object or the walls
     //updates velocities appropriately
-  this.allObjects().forEach( object1 =>
-    this.allObjects().forEach ( object2 => this.isCollided(object1, object2) )
+  this.allObjects().forEach( (object1, i) =>
+    this.allObjects().forEach ( (object2, j) =>
+      (j > i ? this.isCollided(object1, object2) : null)
+    )
   )
 
   //wall collisions
@@ -51,10 +53,15 @@ Board.prototype.checkCollisions = function () {
 };
 
 Board.prototype.isCollided = function (obj1, obj2) {
-  if (obj1 === obj2)
-    return
-  if (this.distanceBetween(obj1.pos, obj2.pos) < obj1.size + obj2.size)
-    debugger
+  if (this.distanceBetween(obj1.pos, obj2.pos) < obj1.size + obj2.size){
+    if(obj1.xVel === 0){
+      obj1.setVector(obj2.getVector())
+      obj2.setVector([0,0])
+    } else {
+      obj2.setVector(obj1.getVector())
+      obj1.setVector([0,0])
+    }
+  }
 };
 
 Board.prototype.distanceBetween = function (pos1, pos2) {

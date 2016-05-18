@@ -185,9 +185,9 @@
 	  var self = this;
 	  //checks all objects to see if they've collided with another object or the walls
 	  //updates velocities appropriately
-	  this.allObjects().forEach(function (object1) {
-	    return _this.allObjects().forEach(function (object2) {
-	      return _this.isCollided(object1, object2);
+	  this.allObjects().forEach(function (object1, i) {
+	    return _this.allObjects().forEach(function (object2, j) {
+	      return j > i ? _this.isCollided(object1, object2) : null;
 	    });
 	  });
 	
@@ -198,8 +198,15 @@
 	};
 	
 	Board.prototype.isCollided = function (obj1, obj2) {
-	  if (obj1 === obj2) return;
-	  if (this.distanceBetween(obj1.pos, obj2.pos) < obj1.size + obj2.size) debugger;
+	  if (this.distanceBetween(obj1.pos, obj2.pos) < obj1.size + obj2.size) {
+	    if (obj1.xVel === 0) {
+	      obj1.setVector(obj2.getVector());
+	      obj2.setVector([0, 0]);
+	    } else {
+	      obj2.setVector(obj1.getVector());
+	      obj1.setVector([0, 0]);
+	    }
+	  }
 	};
 	
 	Board.prototype.distanceBetween = function (pos1, pos2) {
@@ -380,6 +387,10 @@
 	Piece.prototype.setVector = function (vector) {
 	  this.xVel = vector[0];
 	  this.yVel = vector[1];
+	};
+	
+	Piece.prototype.getVector = function () {
+	  return [this.xVel, this.yVel];
 	};
 	
 	//tracks velocity & friction

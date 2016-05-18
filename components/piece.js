@@ -9,13 +9,13 @@ function Piece(startPos, size, color){
 
 Piece.prototype.getPos = function () {
   return this.pos
-};
+}
 
 Piece.prototype.move = function () {
   this.pos[0] += this.xVel
   this.pos[1] += this.yVel
   this.decelerate()
-};
+}
 
 Piece.prototype.decelerate = function () {
   if (this.xVel > 0)
@@ -34,14 +34,14 @@ Piece.prototype.decelerate = function () {
   if (this.yVel < .1 && this.yVel > -.1)
     this.yVel = 0
 
-};
+}
 
 Piece.prototype.draw = function (ctx) {
   if(this.selected)
     this.drawSelected(ctx)
 
-  ctx.fillStyle = this.color;
-  ctx.beginPath();
+  ctx.fillStyle = this.color
+  ctx.beginPath()
 
   ctx.arc(
     this.pos[0],
@@ -50,14 +50,14 @@ Piece.prototype.draw = function (ctx) {
     0,
     2 * Math.PI,
     false
-  );
+  )
 
-  ctx.fill();
-};
+  ctx.fill()
+}
 
 Piece.prototype.drawSelected = function (ctx) {
-  ctx.fillStyle = "yellow";
-  ctx.beginPath();
+  ctx.fillStyle = "yellow"
+  ctx.beginPath()
 
   ctx.arc(
     this.pos[0],
@@ -66,42 +66,46 @@ Piece.prototype.drawSelected = function (ctx) {
     0,
     2 * Math.PI,
     false
-  );
+  )
 
-  ctx.fill();
-};
+  ctx.fill()
+}
 
 Piece.prototype.select = function () {
   this.selected = true
-};
+}
 
 Piece.prototype.unselect = function () {
   this.selected = false
-};
+}
 
 Piece.prototype.bounceX = function () {
   this.xVel *= -1
-};
+}
 
 Piece.prototype.bounceY = function () {
   this.yVel *= -1
-};
+}
 
 Piece.prototype.isStopped = function () {
   return this.xVel === 0 && this.yVel === 0
-};
+}
 
 Piece.prototype.containsPoint = function (pointPos) {
   if( Math.pow((pointPos[0] - this.pos[0]), 2) +
       Math.pow((pointPos[1] - this.pos[1]), 2) <
       Math.pow(this.size, 2) )
     return this
-};
+}
 
 Piece.prototype.setVector = function (vector) {
   this.xVel = vector[0]
   this.yVel = vector[1]
-};
+}
+
+Piece.prototype.getVector = function () {
+  return [this.xVel, this.yVel]
+}
 
 //tracks velocity & friction
 
