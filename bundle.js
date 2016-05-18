@@ -89,11 +89,7 @@
 	}
 	
 	View.prototype.run = function () {
-	  if (this.board.turnFinished()) {
-	    var s = prompt("new speed");
-	  } else {
-	    this.step();
-	  }
+	  this.step();
 	};
 	
 	View.prototype.step = function () {
@@ -220,15 +216,16 @@
 	};
 	
 	Board.prototype.turnFinished = function () {
-	  this.allObjects().every(function (obj) {
+	  return this.allObjects().every(function (obj) {
 	    return obj.isStopped();
 	  });
 	};
 	
 	Board.prototype.getClicked = function (pos) {
-	  return this.allObjects().filter(function (obj) {
+	  // debugger
+	  if (this.turnFinished()) return this.allObjects().filter(function (obj) {
 	    return obj.containsPoint(pos);
-	  });
+	  });else return [];
 	};
 	
 	// tracks collisions

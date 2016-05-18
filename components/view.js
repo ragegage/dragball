@@ -9,11 +9,7 @@ function View(ctx){
 }
 
 View.prototype.run = function () {
-  if(this.board.turnFinished()){
-    let s = prompt("new speed")
-  } else {
-    this.step()
-  }
+  this.step()
 };
 
 View.prototype.step = function () {
@@ -38,7 +34,7 @@ View.prototype.onClickRelease = function (pos) {
     dy = (dy > 10 ? 10 : dy)
     dy = (dy < -10 ? -10 : dy)
     this.selectedPiece.setVector([dx, dy])
-    
+
     this.selectedPiece.unselect()
   }
 };

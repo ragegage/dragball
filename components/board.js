@@ -74,11 +74,14 @@ Board.prototype.draw = function (ctx) {
 };
 
 Board.prototype.turnFinished = function () {
-  this.allObjects().every( obj => obj.isStopped() )
+  return this.allObjects().every( obj => obj.isStopped() )
 };
 
 Board.prototype.getClicked = function (pos) {
-  return this.allObjects().filter( obj => obj.containsPoint(pos) )
+  // debugger
+  if (this.turnFinished())
+    return this.allObjects().filter( obj => obj.containsPoint(pos) )
+  else return []
 };
 
 // tracks collisions
