@@ -75,7 +75,7 @@
 	
 	var _board2 = _interopRequireDefault(_board);
 	
-	var _click_handler = __webpack_require__(5);
+	var _click_handler = __webpack_require__(3);
 	
 	var _click_handler2 = _interopRequireDefault(_click_handler);
 	
@@ -130,11 +130,11 @@
 	  value: true
 	});
 	
-	var _piece = __webpack_require__(3);
+	var _piece = __webpack_require__(4);
 	
 	var _piece2 = _interopRequireDefault(_piece);
 	
-	var _ball = __webpack_require__(4);
+	var _ball = __webpack_require__(5);
 	
 	var _ball2 = _interopRequireDefault(_ball);
 	
@@ -185,14 +185,26 @@
 	  var self = this;
 	  //checks all objects to see if they've collided with another object or the walls
 	  //updates velocities appropriately
-	  // this.allObjects().forEach( function(object1) {
-	  //   this.allObjects().forEach ( object2 => this.isCollided(object1, object2) )
-	  // })
+	  this.allObjects().forEach(function (object1) {
+	    return _this.allObjects().forEach(function (object2) {
+	      return _this.isCollided(object1, object2);
+	    });
+	  });
 	
 	  //wall collisions
 	  this.allObjects().forEach(function (object) {
 	    return _this.handleWallBounces(object);
 	  });
+	};
+	
+	Board.prototype.isCollided = function (obj1, obj2) {
+	  if (obj1 === obj2) return;
+	  if (this.distanceBetween(obj1.pos, obj2.pos) < obj1.size + obj2.size) debugger;
+	};
+	
+	Board.prototype.distanceBetween = function (pos1, pos2) {
+	  var sqr = Math.pow(pos2[0] - pos1[0], 2) + Math.pow(pos2[1] - pos1[1], 2);
+	  return Math.sqrt(sqr);
 	};
 	
 	Board.prototype.handleWallBounces = function (obj) {
@@ -236,6 +248,55 @@
 
 /***/ },
 /* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function ClickHandler(view) {
+	  this.view = view;
+	  this.addListeners();
+	}
+	
+	ClickHandler.prototype.addListeners = function () {
+	  document.addEventListener("mousedown", this.processMouseDown.bind(this), false);
+	  document.addEventListener("mouseup", this.processMouseUp.bind(this), false);
+	};
+	
+	ClickHandler.prototype.processMouseDown = function (e) {
+	  e.preventDefault();
+	
+	  this.canvas = this.canvas || document.getElementById('game-canvas');
+	
+	  var elLocationX = this.canvas.getBoundingClientRect().left;
+	  var elLocationY = this.canvas.getBoundingClientRect().top;
+	  var relativeLocationX = e.pageX - elLocationX;
+	  var relativeLocationY = e.pageY - elLocationY;
+	
+	  var pos = [relativeLocationX, relativeLocationY];
+	  this.view.onClick(pos);
+	};
+	
+	ClickHandler.prototype.processMouseUp = function (e) {
+	  e.preventDefault();
+	
+	  var elLocationX = this.canvas.getBoundingClientRect().left;
+	  var elLocationY = this.canvas.getBoundingClientRect().top;
+	  var relativeLocationX = e.pageX - elLocationX;
+	  var relativeLocationY = e.pageY - elLocationY;
+	
+	  var pos = [relativeLocationX, relativeLocationY];
+	  this.view.onClickRelease(pos);
+	};
+	
+	exports.default = ClickHandler;
+	
+	// window.ClickHandler = ClickHandler
+
+/***/ },
+/* 4 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -326,7 +387,7 @@
 	exports.default = Piece;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -348,55 +409,6 @@
 	//tracks velocity & friction
 	
 	exports.default = Ball;
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	"use strict";
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	function ClickHandler(view) {
-	  this.view = view;
-	  this.addListeners();
-	}
-	
-	ClickHandler.prototype.addListeners = function () {
-	  document.addEventListener("mousedown", this.processMouseDown.bind(this), false);
-	  document.addEventListener("mouseup", this.processMouseUp.bind(this), false);
-	};
-	
-	ClickHandler.prototype.processMouseDown = function (e) {
-	  e.preventDefault();
-	
-	  this.canvas = this.canvas || document.getElementById('game-canvas');
-	
-	  var elLocationX = this.canvas.getBoundingClientRect().left;
-	  var elLocationY = this.canvas.getBoundingClientRect().top;
-	  var relativeLocationX = e.pageX - elLocationX;
-	  var relativeLocationY = e.pageY - elLocationY;
-	
-	  var pos = [relativeLocationX, relativeLocationY];
-	  this.view.onClick(pos);
-	};
-	
-	ClickHandler.prototype.processMouseUp = function (e) {
-	  e.preventDefault();
-	
-	  var elLocationX = this.canvas.getBoundingClientRect().left;
-	  var elLocationY = this.canvas.getBoundingClientRect().top;
-	  var relativeLocationX = e.pageX - elLocationX;
-	  var relativeLocationY = e.pageY - elLocationY;
-	
-	  var pos = [relativeLocationX, relativeLocationY];
-	  this.view.onClickRelease(pos);
-	};
-	
-	exports.default = ClickHandler;
-	
-	// window.ClickHandler = ClickHandler
 
 /***/ }
 /******/ ]);

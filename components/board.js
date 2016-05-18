@@ -42,12 +42,24 @@ Board.prototype.checkCollisions = function () {
   let self = this
   //checks all objects to see if they've collided with another object or the walls
     //updates velocities appropriately
-  // this.allObjects().forEach( function(object1) {
-  //   this.allObjects().forEach ( object2 => this.isCollided(object1, object2) )
-  // })
+  this.allObjects().forEach( object1 =>
+    this.allObjects().forEach ( object2 => this.isCollided(object1, object2) )
+  )
 
   //wall collisions
   this.allObjects().forEach( object => this.handleWallBounces(object) );
+};
+
+Board.prototype.isCollided = function (obj1, obj2) {
+  if (obj1 === obj2)
+    return
+  if (this.distanceBetween(obj1.pos, obj2.pos) < obj1.size + obj2.size)
+    debugger
+};
+
+Board.prototype.distanceBetween = function (pos1, pos2) {
+  let sqr = Math.pow(pos2[0] - pos1[0], 2) + Math.pow(pos2[1] - pos1[1], 2)
+  return Math.sqrt(sqr)
 };
 
 Board.prototype.handleWallBounces = function (obj) {
