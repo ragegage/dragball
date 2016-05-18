@@ -71,15 +71,23 @@ Board.prototype.distanceBetween = function (pos1, pos2) {
 
 Board.prototype.handleWallBounces = function (obj) {
   let objPos = obj.getPos()
-  if (objPos[0] < 0 + PIECE_SIZE)
+  if (objPos[0] < 0 + PIECE_SIZE){
     obj.bounceX()
-  if (objPos[1] < 0 + PIECE_SIZE)
+    obj.setX(PIECE_SIZE)
+  }
+  if (objPos[1] < 0 + PIECE_SIZE){
     obj.bounceY()
+    obj.setY(PIECE_SIZE)
+  }
 
-  if (objPos[0] > BOARD_WIDTH - PIECE_SIZE)
+  if (objPos[0] > BOARD_WIDTH - PIECE_SIZE){
     obj.bounceX()
-  if (objPos[1] > BOARD_HEIGHT - PIECE_SIZE)
+    obj.setX(BOARD_WIDTH - PIECE_SIZE)
+  }
+  if (objPos[1] > BOARD_HEIGHT - PIECE_SIZE){
     obj.bounceY()
+    obj.setY(BOARD_HEIGHT - PIECE_SIZE)
+  }
 
 };
 

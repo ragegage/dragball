@@ -216,11 +216,23 @@
 	
 	Board.prototype.handleWallBounces = function (obj) {
 	  var objPos = obj.getPos();
-	  if (objPos[0] < 0 + PIECE_SIZE) obj.bounceX();
-	  if (objPos[1] < 0 + PIECE_SIZE) obj.bounceY();
+	  if (objPos[0] < 0 + PIECE_SIZE) {
+	    obj.bounceX();
+	    obj.setX(PIECE_SIZE);
+	  }
+	  if (objPos[1] < 0 + PIECE_SIZE) {
+	    obj.bounceY();
+	    obj.setY(PIECE_SIZE);
+	  }
 	
-	  if (objPos[0] > BOARD_WIDTH - PIECE_SIZE) obj.bounceX();
-	  if (objPos[1] > BOARD_HEIGHT - PIECE_SIZE) obj.bounceY();
+	  if (objPos[0] > BOARD_WIDTH - PIECE_SIZE) {
+	    obj.bounceX();
+	    obj.setX(BOARD_WIDTH - PIECE_SIZE);
+	  }
+	  if (objPos[1] > BOARD_HEIGHT - PIECE_SIZE) {
+	    obj.bounceY();
+	    obj.setY(BOARD_HEIGHT - PIECE_SIZE);
+	  }
 	};
 	
 	Board.prototype.checkForWin = function () {
@@ -322,6 +334,14 @@
 	
 	Piece.prototype.getPos = function () {
 	  return this.pos;
+	};
+	
+	Piece.prototype.setX = function (x) {
+	  this.pos[0] = x;
+	};
+	
+	Piece.prototype.setY = function (y) {
+	  this.pos[1] = y;
 	};
 	
 	Piece.prototype.move = function () {

@@ -11,6 +11,14 @@ Piece.prototype.getPos = function () {
   return this.pos
 }
 
+Piece.prototype.setX = function (x) {
+  this.pos[0] = x
+}
+
+Piece.prototype.setY = function (y) {
+  this.pos[1] = y
+}
+
 Piece.prototype.move = function () {
   this.pos[0] += this.xVel
   this.pos[1] += this.yVel
