@@ -8,4 +8,8 @@ function App(){
 
 
 // for testing
-window.App = App
+
+document.addEventListener("DOMContentLoaded", function() {
+  const a = new App()
+  a.view.run()
+});

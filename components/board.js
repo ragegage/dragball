@@ -52,8 +52,23 @@ Board.prototype.checkCollisions = function () {
   this.allObjects().forEach( object => this.handleWallBounces(object) );
 };
 
+Board.prototype.subtractVectors = function (v1, v2) {
+  return [v1[0] - v2[0], v1[1] - v2[1]]
+};
+
 Board.prototype.isCollided = function (obj1, obj2) {
   if (this.distanceBetween(obj1.pos, obj2.pos) < obj1.size + obj2.size){
+
+    // one piece has to be at rest (v = 0)
+      //set one piece as reference, calculate other piece's v relative to that
+    this.subtractVectors(obj1.getVector(), obj2.getVector())
+
+
+    // let vectorRatio = obj1.getVector()[1] / obj1.getVector()[0]
+    // let positionRatio = (obj2.getPos()[1] - obj1.getPos()[1]) /
+    //                       (obj2.getPos()[0] - obj1.getPos()[0])
+    //
+    // debugger
     if(obj1.xVel === 0){
       obj1.setVector(obj2.getVector())
       obj2.setVector([0,0])
