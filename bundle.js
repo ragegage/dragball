@@ -161,8 +161,12 @@
 	
 	Board.prototype.populatePieces = function () {
 	  var pieces = [];
-	  pieces.push(new _piece2.default([BOARD_WIDTH / 2, BOARD_HEIGHT / 2], PIECE_SIZE, this.team1));
-	  pieces.push(new _piece2.default([100, 100], PIECE_SIZE, this.team2));
+	  pieces.push(new _piece2.default([100, 100], PIECE_SIZE, this.team1));
+	  pieces.push(new _piece2.default([100, 200], PIECE_SIZE, this.team1));
+	  pieces.push(new _piece2.default([100, 300], PIECE_SIZE, this.team1));
+	  pieces.push(new _piece2.default([500, 100], PIECE_SIZE, this.team2));
+	  pieces.push(new _piece2.default([500, 200], PIECE_SIZE, this.team2));
+	  pieces.push(new _piece2.default([500, 300], PIECE_SIZE, this.team2));
 	
 	  return pieces;
 	};

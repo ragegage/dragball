@@ -18,8 +18,12 @@ function Board(team1, team2){
 
 Board.prototype.populatePieces = function () {
   let pieces = []
-  pieces.push(new Piece([BOARD_WIDTH/2, BOARD_HEIGHT/2], PIECE_SIZE, this.team1))
-  pieces.push(new Piece([100, 100], PIECE_SIZE, this.team2))
+  pieces.push(new Piece([100, 100], PIECE_SIZE, this.team1))
+  pieces.push(new Piece([100, 200], PIECE_SIZE, this.team1))
+  pieces.push(new Piece([100, 300], PIECE_SIZE, this.team1))
+  pieces.push(new Piece([500, 100], PIECE_SIZE, this.team2))
+  pieces.push(new Piece([500, 200], PIECE_SIZE, this.team2))
+  pieces.push(new Piece([500, 300], PIECE_SIZE, this.team2))
 
   return pieces
 }
