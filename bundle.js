@@ -155,7 +155,7 @@
 	  this.team2 = team2;
 	  this.width = BOARD_WIDTH;
 	  this.height = BOARD_HEIGHT;
-	  //this.ball = new Ball([BOARD_WIDTH/2, BOARD_HEIGHT/2], BALL_SIZE)
+	  this.ball = new _ball2.default([400, 250], BALL_SIZE);
 	  this.pieces = this.populatePieces();
 	}
 	
@@ -180,7 +180,7 @@
 	};
 	
 	Board.prototype.allObjects = function () {
-	  return this.pieces; //.concat(this.ball);
+	  return this.pieces.concat(this.ball);
 	};
 	
 	Board.prototype.checkCollisions = function () {
@@ -207,23 +207,7 @@
 	
 	Board.prototype.isCollided = function (obj1, obj2) {
 	  if (this.distanceBetween(obj1.pos, obj2.pos) < obj1.size + obj2.size) {
-	
-	    // one piece has to be at rest (v = 0)
-	    //set one piece as reference, calculate other piece's v relative to that
-	    this.subtractVectors(obj1.getVector(), obj2.getVector());
-	
-	    // let vectorRatio = obj1.getVector()[1] / obj1.getVector()[0]
-	    // let positionRatio = (obj2.getPos()[1] - obj1.getPos()[1]) /
-	    //                       (obj2.getPos()[0] - obj1.getPos()[0])
-	    //
-	    // debugger
-	    if (obj1.xVel === 0) {
-	      obj1.setVector(obj2.getVector());
-	      obj2.setVector([0, 0]);
-	    } else {
-	      obj2.setVector(obj1.getVector());
-	      obj1.setVector([0, 0]);
-	    }
+	    this.exchangeMomentum(obj1, obj2);
 	  }
 	};
 	
@@ -234,22 +218,22 @@
 	
 	Board.prototype.handleWallBounces = function (obj) {
 	  var objPos = obj.getPos();
-	  if (objPos[0] < 0 + PIECE_SIZE) {
+	  if (objPos[0] < 0 + obj.size) {
 	    obj.bounceX();
-	    obj.setX(PIECE_SIZE);
+	    obj.setX(obj.size);
 	  }
-	  if (objPos[1] < 0 + PIECE_SIZE) {
+	  if (objPos[1] < 0 + obj.size) {
 	    obj.bounceY();
-	    obj.setY(PIECE_SIZE);
+	    obj.setY(obj.size);
 	  }
 	
-	  if (objPos[0] > BOARD_WIDTH - PIECE_SIZE) {
+	  if (objPos[0] > BOARD_WIDTH - obj.size) {
 	    obj.bounceX();
-	    obj.setX(BOARD_WIDTH - PIECE_SIZE);
+	    obj.setX(BOARD_WIDTH - obj.size);
 	  }
-	  if (objPos[1] > BOARD_HEIGHT - PIECE_SIZE) {
+	  if (objPos[1] > BOARD_HEIGHT - obj.size) {
 	    obj.bounceY();
-	    obj.setY(BOARD_HEIGHT - PIECE_SIZE);
+	    obj.setY(BOARD_HEIGHT - obj.size);
 	  }
 	};
 	
@@ -272,7 +256,7 @@
 	
 	Board.prototype.getClicked = function (pos) {
 	  // debugger
-	  if (this.turnFinished()) return this.allObjects().filter(function (obj) {
+	  if (this.turnFinished()) return this.pieces.filter(function (obj) {
 	    return obj.containsPoint(pos);
 	  });else return [];
 	};
@@ -289,8 +273,8 @@
 	      locDiff2 = this.negativeCoords(locDiff1),
 	      coef = this.dotProduct(velDiff1, locDiff1) / radMagSq;
 	
-	  obj1.setVector = this.subtractCoords(obj1.vel, this.scaleCoords(coef, locDiff1));
-	  obj2.setVector = this.subtractCoords(obj2.vel, this.scaleCoords(coef, locDiff2));
+	  obj1.setVector(this.subtractCoords(obj1.getVector(), this.scaleCoords(coef, locDiff1)));
+	  obj2.setVector(this.subtractCoords(obj2.getVector(), this.scaleCoords(coef, locDiff2)));
 	};
 	
 	Board.prototype.magnitudeOf = function (vector) {
@@ -428,10 +412,69 @@
 	  this.size = size;
 	  this.xVel = 0;
 	  this.yVel = 0;
+	  this.color = "black";
 	}
 	
 	Ball.prototype.getPos = function () {
 	  return this.pos;
+	};
+	
+	Ball.prototype.setX = function (x) {
+	  this.pos[0] = x;
+	};
+	
+	Ball.prototype.setY = function (y) {
+	  this.pos[1] = y;
+	};
+	
+	Ball.prototype.move = function () {
+	  this.pos[0] += this.xVel;
+	  this.pos[1] += this.yVel;
+	  this.decelerate();
+	};
+	
+	Ball.prototype.decelerate = function () {
+	  if (this.xVel > 0) this.xVel -= .01 * this.xVel;else if (this.xVel < 0) this.xVel += -.01 * this.xVel;
+	
+	  if (this.xVel < .1 && this.xVel > -.1) this.xVel = 0;
+	
+	  if (this.yVel > 0) this.yVel -= .01 * this.yVel;else if (this.yVel < 0) this.yVel += -.01 * this.yVel;
+	
+	  if (this.yVel < .1 && this.yVel > -.1) this.yVel = 0;
+	};
+	
+	Ball.prototype.draw = function (ctx) {
+	  ctx.fillStyle = this.color;
+	  ctx.beginPath();
+	
+	  ctx.arc(this.pos[0], this.pos[1], this.size, 0, 2 * Math.PI, false);
+	
+	  ctx.fill();
+	};
+	
+	Ball.prototype.bounceX = function () {
+	  this.xVel *= -1;
+	};
+	
+	Ball.prototype.bounceY = function () {
+	  this.yVel *= -1;
+	};
+	
+	Ball.prototype.isStopped = function () {
+	  return this.xVel === 0 && this.yVel === 0;
+	};
+	
+	Ball.prototype.containsPoint = function (pointPos) {
+	  if (Math.pow(pointPos[0] - this.pos[0], 2) + Math.pow(pointPos[1] - this.pos[1], 2) < Math.pow(this.size, 2)) return this;
+	};
+	
+	Ball.prototype.setVector = function (vector) {
+	  this.xVel = vector[0];
+	  this.yVel = vector[1];
+	};
+	
+	Ball.prototype.getVector = function () {
+	  return [this.xVel, this.yVel];
 	};
 	
 	//tracks velocity & friction
