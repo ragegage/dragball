@@ -15,3 +15,5 @@ Potential components include:
 ...as well as a View component that manages the display of the game.
 
 Thanks to Guy Hadas' Cowboy Shootout for structure and inspiration.
+
+THanks to Dave Noah for inspiration and emotional support.
