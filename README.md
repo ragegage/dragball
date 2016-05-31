@@ -16,4 +16,4 @@ Potential components include:
 
 Thanks to Guy Hadas' Cowboy Shootout for structure and inspiration.
 
-THanks to Dave Noah for inspiration and emotional support.
+Thanks to Dave Noah for inspiration and emotional support.
