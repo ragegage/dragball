@@ -79,7 +79,7 @@
 	
 	var _board2 = _interopRequireDefault(_board);
 	
-	var _click_handler = __webpack_require__(5);
+	var _click_handler = __webpack_require__(6);
 	
 	var _click_handler2 = _interopRequireDefault(_click_handler);
 	
@@ -142,9 +142,13 @@
 	
 	var _ball2 = _interopRequireDefault(_ball);
 	
+	var _goal = __webpack_require__(5);
+	
+	var _goal2 = _interopRequireDefault(_goal);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var BOARD_WIDTH = 600;
+	var BOARD_WIDTH = 500;
 	var BOARD_HEIGHT = 400;
 	
 	var PIECE_SIZE = 25;
@@ -155,9 +159,16 @@
 	  this.team2 = team2;
 	  this.width = BOARD_WIDTH;
 	  this.height = BOARD_HEIGHT;
+	  this.offset = 50;
+	  this.populate();
+	}
+	
+	Board.prototype.populate = function () {
 	  this.ball = new _ball2.default([400, 250], BALL_SIZE);
 	  this.pieces = this.populatePieces();
-	}
+	  this.goal1 = new _goal2.default(this.team1, [0, 250], 400);
+	  this.goal2 = new _goal2.default(this.team2, [500, 250], 400);
+	};
 	
 	Board.prototype.populatePieces = function () {
 	  var pieces = [];
@@ -174,7 +185,7 @@
 	Board.prototype.step = function () {
 	  this.moveObjects();
 	  this.checkCollisions();
-	  // this.checkForWin();
+	  this.checkForWin();
 	};
 	
 	Board.prototype.moveObjects = function () {
@@ -222,18 +233,22 @@
 	
 	Board.prototype.handleWallBounces = function (obj) {
 	  var objPos = obj.getPos();
-	  if (objPos[0] < 0 + obj.size) {
-	    obj.bounceX();
-	    obj.setX(obj.size);
+	  if (objPos[0] < this.offset + obj.size) {
+	    if (obj === this.ball && this.goal1.covers(objPos[1])) {} else {
+	      obj.bounceX();
+	      obj.setX(this.offset + obj.size);
+	    }
 	  }
 	  if (objPos[1] < 0 + obj.size) {
 	    obj.bounceY();
 	    obj.setY(obj.size);
 	  }
 	
-	  if (objPos[0] > BOARD_WIDTH - obj.size) {
-	    obj.bounceX();
-	    obj.setX(BOARD_WIDTH - obj.size);
+	  if (objPos[0] > BOARD_WIDTH + this.offset - obj.size) {
+	    if (obj === this.ball && this.goal2.covers(objPos[1])) {} else {
+	      obj.bounceX();
+	      obj.setX(BOARD_WIDTH + this.offset - obj.size);
+	    }
 	  }
 	  if (objPos[1] > BOARD_HEIGHT - obj.size) {
 	    obj.bounceY();
@@ -243,10 +258,18 @@
 	
 	Board.prototype.checkForWin = function () {
 	  //checks ball to see if it is in the goal
+	  if (this.goal1.isGoal(this.ball)) {
+	    alert("team 2 wins");
+	    this.populate();
+	  }
+	  if (this.goal2.isGoal(this.ball)) {
+	    alert("team 1 wins");
+	    this.populate();
+	  }
 	};
 	
 	Board.prototype.draw = function (ctx) {
-	  ctx.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+	  ctx.clearRect(0, 0, BOARD_WIDTH + this.offset * 2, BOARD_HEIGHT);
 	  this.allObjects().forEach(function (object) {
 	    return object.draw(ctx);
 	  });
@@ -487,6 +510,31 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	function Goal(team, pos, size) {
+	  this.team = team;
+	  this.pos = pos;
+	  this.size = size;
+	}
+	
+	Goal.prototype.isGoal = function (ball) {
+	  return Math.abs(ball.getPos()[0] - this.pos[0]) < ball.size && Math.abs(ball.getPos()[1] - this.pos[1]) < ball.size + this.size;
+	};
+	
+	Goal.prototype.covers = function (yPos) {
+	  return this.pos[1] - this.size / 2 < yPos && this.pos[1] + this.size / 2 > yPos;
+	};
+	
+	exports.default = Goal;
+
+/***/ },
+/* 6 */
 /***/ function(module, exports) {
 
 	"use strict";

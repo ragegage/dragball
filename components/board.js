@@ -1,7 +1,8 @@
 import Piece from './piece'
 import Ball from './ball'
+import Goal from './goal'
 
-const BOARD_WIDTH = 600
+const BOARD_WIDTH = 500
 const BOARD_HEIGHT = 400
 
 const PIECE_SIZE = 25
@@ -12,9 +13,16 @@ function Board(team1, team2){
   this.team2 = team2
   this.width = BOARD_WIDTH
   this.height = BOARD_HEIGHT
+  this.offset = 50
+  this.populate()
+}
+
+Board.prototype.populate = function () {
   this.ball = new Ball([400, 250], BALL_SIZE)
   this.pieces = this.populatePieces()
-}
+  this.goal1 = new Goal(this.team1, [0, 250], 400)
+  this.goal2 = new Goal(this.team2, [500, 250], 400)
+};
 
 Board.prototype.populatePieces = function () {
   let pieces = []
@@ -31,7 +39,7 @@ Board.prototype.populatePieces = function () {
 Board.prototype.step = function () {
   this.moveObjects()
   this.checkCollisions()
-  // this.checkForWin();
+  this.checkForWin();
 }
 
 Board.prototype.moveObjects = function () {
@@ -73,18 +81,24 @@ Board.prototype.distanceBetween = function (pos1, pos2) {
 
 Board.prototype.handleWallBounces = function (obj) {
   let objPos = obj.getPos()
-  if (objPos[0] < 0 + obj.size){
-    obj.bounceX()
-    obj.setX(obj.size)
+  if (objPos[0] < this.offset + obj.size){
+    if (obj === this.ball && this.goal1.covers(objPos[1])) {
+    } else {
+      obj.bounceX()
+      obj.setX(this.offset + obj.size)
+    }
   }
   if (objPos[1] < 0 + obj.size){
     obj.bounceY()
     obj.setY(obj.size)
   }
 
-  if (objPos[0] > BOARD_WIDTH - obj.size){
-    obj.bounceX()
-    obj.setX(BOARD_WIDTH - obj.size)
+  if (objPos[0] > (BOARD_WIDTH + this.offset) - obj.size){
+    if (obj === this.ball && this.goal2.covers(objPos[1])) {
+    } else {
+      obj.bounceX()
+      obj.setX((BOARD_WIDTH + this.offset) - obj.size)
+    }
   }
   if (objPos[1] > BOARD_HEIGHT - obj.size){
     obj.bounceY()
@@ -95,10 +109,18 @@ Board.prototype.handleWallBounces = function (obj) {
 
 Board.prototype.checkForWin = function () {
   //checks ball to see if it is in the goal
+  if (this.goal1.isGoal( this.ball )){
+    alert("team 2 wins")
+    this.populate()
+  }
+  if (this.goal2.isGoal( this.ball )){
+    alert("team 1 wins")
+    this.populate()
+  }
 }
 
 Board.prototype.draw = function (ctx) {
-  ctx.clearRect(0, 0, BOARD_WIDTH, BOARD_HEIGHT);
+  ctx.clearRect(0, 0, BOARD_WIDTH + this.offset * 2, BOARD_HEIGHT);
   this.allObjects().forEach( object => object.draw(ctx) );
 }
 
