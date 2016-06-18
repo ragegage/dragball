@@ -20,8 +20,8 @@ function Board(team1, team2){
 Board.prototype.populate = function () {
   this.ball = new Ball([400, 250], BALL_SIZE)
   this.pieces = this.populatePieces()
-  this.goal1 = new Goal(this.team1, [0, 250], 400)
-  this.goal2 = new Goal(this.team2, [500, 250], 400)
+  this.goal1 = new Goal(this.team1, [0, 100], 200)
+  this.goal2 = new Goal(this.team2, [550, 100], 200)
 };
 
 Board.prototype.populatePieces = function () {
@@ -82,7 +82,7 @@ Board.prototype.distanceBetween = function (pos1, pos2) {
 Board.prototype.handleWallBounces = function (obj) {
   let objPos = obj.getPos()
   if (objPos[0] < this.offset + obj.size){
-    if (obj === this.ball && this.goal1.covers(objPos[1])) {
+    if (obj === this.ball && this.goal1.yCovers(objPos[1])) {
     } else {
       obj.bounceX()
       obj.setX(this.offset + obj.size)
@@ -94,7 +94,7 @@ Board.prototype.handleWallBounces = function (obj) {
   }
 
   if (objPos[0] > (BOARD_WIDTH + this.offset) - obj.size){
-    if (obj === this.ball && this.goal2.covers(objPos[1])) {
+    if (obj === this.ball && this.goal2.yCovers(objPos[1])) {
     } else {
       obj.bounceX()
       obj.setX((BOARD_WIDTH + this.offset) - obj.size)
@@ -121,7 +121,7 @@ Board.prototype.checkForWin = function () {
 
 Board.prototype.draw = function (ctx) {
   ctx.clearRect(0, 0, BOARD_WIDTH + this.offset * 2, BOARD_HEIGHT);
-  this.allObjects().forEach( object => object.draw(ctx) );
+  this.allObjects().concat([this.goal1, this.goal2]).forEach( object => object.draw(ctx) );
 }
 
 Board.prototype.turnFinished = function () {

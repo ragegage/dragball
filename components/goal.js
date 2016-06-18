@@ -2,16 +2,30 @@ function Goal(team, pos, size){
   this.team = team
   this.pos = pos
   this.size = size;
+  this.color = "yellow"
 }
 
 Goal.prototype.isGoal = function (ball) {
-  return (Math.abs(ball.getPos()[0] - this.pos[0]) < ball.size &&
-    Math.abs(ball.getPos()[1] - this.pos[1]) < ball.size + this.size)
+  return this.yCovers(ball.pos[1])
+    && this.xCovers(ball.pos[0])
 }
 
-Goal.prototype.covers = function (yPos) {
-  return this.pos[1] - (this.size/2) < yPos
-    && this.pos[1] + (this.size/2) > yPos
+Goal.prototype.yCovers = function (yPos) {
+  return this.pos[1] < yPos
+    && this.pos[1] + this.size > yPos
+}
+
+Goal.prototype.xCovers = function (xPos) {
+  return this.pos[0] === 0 ? this.pos[0] + 50 > xPos : this.pos[0] < xPos
 };
+
+Goal.prototype.draw = function (ctx) {
+  ctx.fillStyle = this.color
+  ctx.beginPath()
+
+  ctx.rect(this.pos[0],this.pos[1],50,this.size);
+
+  ctx.fill()
+}
 
 export default Goal

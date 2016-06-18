@@ -166,8 +166,8 @@
 	Board.prototype.populate = function () {
 	  this.ball = new _ball2.default([400, 250], BALL_SIZE);
 	  this.pieces = this.populatePieces();
-	  this.goal1 = new _goal2.default(this.team1, [0, 250], 400);
-	  this.goal2 = new _goal2.default(this.team2, [500, 250], 400);
+	  this.goal1 = new _goal2.default(this.team1, [0, 100], 200);
+	  this.goal2 = new _goal2.default(this.team2, [550, 100], 200);
 	};
 	
 	Board.prototype.populatePieces = function () {
@@ -234,7 +234,7 @@
 	Board.prototype.handleWallBounces = function (obj) {
 	  var objPos = obj.getPos();
 	  if (objPos[0] < this.offset + obj.size) {
-	    if (obj === this.ball && this.goal1.covers(objPos[1])) {} else {
+	    if (obj === this.ball && this.goal1.yCovers(objPos[1])) {} else {
 	      obj.bounceX();
 	      obj.setX(this.offset + obj.size);
 	    }
@@ -245,7 +245,7 @@
 	  }
 	
 	  if (objPos[0] > BOARD_WIDTH + this.offset - obj.size) {
-	    if (obj === this.ball && this.goal2.covers(objPos[1])) {} else {
+	    if (obj === this.ball && this.goal2.yCovers(objPos[1])) {} else {
 	      obj.bounceX();
 	      obj.setX(BOARD_WIDTH + this.offset - obj.size);
 	    }
@@ -270,7 +270,7 @@
 	
 	Board.prototype.draw = function (ctx) {
 	  ctx.clearRect(0, 0, BOARD_WIDTH + this.offset * 2, BOARD_HEIGHT);
-	  this.allObjects().forEach(function (object) {
+	  this.allObjects().concat([this.goal1, this.goal2]).forEach(function (object) {
 	    return object.draw(ctx);
 	  });
 	};
@@ -521,14 +521,28 @@
 	  this.team = team;
 	  this.pos = pos;
 	  this.size = size;
+	  this.color = "yellow";
 	}
 	
 	Goal.prototype.isGoal = function (ball) {
-	  return Math.abs(ball.getPos()[0] - this.pos[0]) < ball.size && Math.abs(ball.getPos()[1] - this.pos[1]) < ball.size + this.size;
+	  return this.yCovers(ball.pos[1]) && this.xCovers(ball.pos[0]);
 	};
 	
-	Goal.prototype.covers = function (yPos) {
-	  return this.pos[1] - this.size / 2 < yPos && this.pos[1] + this.size / 2 > yPos;
+	Goal.prototype.yCovers = function (yPos) {
+	  return this.pos[1] < yPos && this.pos[1] + this.size > yPos;
+	};
+	
+	Goal.prototype.xCovers = function (xPos) {
+	  return this.pos[0] === 0 ? this.pos[0] + 50 > xPos : this.pos[0] < xPos;
+	};
+	
+	Goal.prototype.draw = function (ctx) {
+	  ctx.fillStyle = this.color;
+	  ctx.beginPath();
+	
+	  ctx.rect(this.pos[0], this.pos[1], 50, this.size);
+	
+	  ctx.fill();
 	};
 	
 	exports.default = Goal;
